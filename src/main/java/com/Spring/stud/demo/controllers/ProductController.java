@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.util.StringUtils;
 
 @Controller
 public class ProductController {
@@ -21,27 +20,39 @@ public class ProductController {
     }
 
     @GetMapping("/catalogue")
-    public String showAllGoods(Model model) {
+    public String showAllProducts(Model model) {
         model.addAttribute("products", productService.getAll());
-        return "product_list";
+        return "productCatalogue";
     }
 
-    @GetMapping("/article/{id}")
-    public String getArticleInfo(Model model, @PathVariable Long id) {
+    @GetMapping("/product/{id}")
+    public String getProductInfo(Model model, @PathVariable Long id) {
         model.addAttribute("product", productService.getById(id));
-        return "articleAbout";
+        return "productInfo";
     }
 
     @PostMapping("/add")
-    public String addArticle(@RequestParam Long id, @RequestParam String title, @RequestParam int cost) {
+    public String addProduct(@RequestParam Long id, @RequestParam String title, @RequestParam int cost) {
         Product product = new Product(id, title, cost);
         productService.save(product);
         return "redirect:/catalogue";
     }
 
     @GetMapping("/add")
-    public String addArticle() {
-        return "addArticle";
+    public String addProduct() {
+        return "addProduct";
+    }
+
+    @GetMapping("/addCost/{id}")
+    public String addCost(@PathVariable Long id) {
+        productService.addCost(id);
+        return "redirect:/product/{id}";
+    }
+
+    @GetMapping("/reduceCost/{id}")
+    public String reduceCost(@PathVariable Long id) {
+        productService.reduceCost(id);
+        return "redirect:/product/{id}";
     }
 
 }

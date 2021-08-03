@@ -28,4 +28,13 @@ public class ProductService {
         return productRepository.getById(id);
     }
 
+    public void addCost(Long id) {
+        productRepository.addCost(id);
+    }
+
+    public void reduceCost(Long id) {
+        productRepository.reduceCost(id);
+    }
+
+
 }

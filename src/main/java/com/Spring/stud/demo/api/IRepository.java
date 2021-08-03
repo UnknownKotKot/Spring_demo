@@ -9,4 +9,6 @@ public interface IRepository<K> {
     List<K> getAll ();
     K getById (Long id);
     void save(K k);
+    void addCost(Long id);
+    void reduceCost(Long id);
 }

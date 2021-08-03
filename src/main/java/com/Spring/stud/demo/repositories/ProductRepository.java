@@ -38,4 +38,15 @@ public class ProductRepository implements IRepository<Product> {
     public void save(Product product) {
         products.add(product);
     }
+
+    @Override
+    public void addCost(Long id) {
+        int oldCost = getById(id).getCost();
+        getById(id).setCost(oldCost+1);
+    }
+    @Override
+    public void reduceCost(Long id) {
+        int oldCost = getById(id).getCost();
+        getById(id).setCost(oldCost-1);
+    }
 }

@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Product list</title>
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -13,7 +12,7 @@
     <table class="table">
         <thead>
         <tr>
-            <td>Article:</td>
+            <td>Id:</td>
             <td>Title:</td>
             <td>Price:</td>
         </tr>
@@ -23,7 +22,7 @@
             <td th:text="${prod.id}"></td>
             <td th:text="${prod.title}"></td>
             <td th:text="${prod.cost}"></td>
-            <td><a th:href="@{'/article/' + ${prod.id}}" class="btn btn-info">Get info</a></td>
+            <td><a th:href="@{'/product/' + ${prod.id}}" class="btn btn-info">Get info</a></td>
         </tr>
 
         </tbody>

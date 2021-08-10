@@ -23,6 +23,7 @@
             <td th:text="${prod.title}"></td>
             <td th:text="${prod.cost}"></td>
             <td><a th:href="@{'/product/' + ${prod.id}}" class="btn btn-info">Get info</a></td>
+            <td><a th:href="@{'/delete/' + ${prod.id}}" class="btn btn-dark">delete</a></td>
         </tr>
 
         </tbody>

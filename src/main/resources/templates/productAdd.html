@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New product builder</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2>Add product</h2>
+    <form method="post" th:action="@{'/add'}">
+        <div class="mb-3">
+            <label for="id" class="form-label">Id: </label>
+            <input type="number" name="id" class="form-control" id="id" placeholder="type ID here for update">
+        </div>
+        <div class="mb-3">
+            <label for="title" class="form-label">Title: </label>
+            <input type="text" name="title" class="form-control" id="title">
+        </div>
+        <div class="mb-3">
+            <label for="cost" class="form-label">Cost: </label>
+            <input type="number" name="cost" class="form-control" id="cost">
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+    <p></p>
+    <a th:href="@{'/catalogue'}" class="btn btn-primary">Back</a>
+</div>
+
+</body>
+</html>

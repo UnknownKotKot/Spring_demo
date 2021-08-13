@@ -1,0 +1,11 @@
+server:
+  port: 8189
+  servlet:
+    context-path: /app
+
+# To See H2 Console in Browser:
+# http://localhost:{port}{context-path}/h2-console
+spring:
+  h2:
+    console:
+      enabled: true

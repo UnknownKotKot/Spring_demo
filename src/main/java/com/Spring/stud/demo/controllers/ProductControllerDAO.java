@@ -33,7 +33,7 @@ public class ProductControllerDAO {
     }
 
     @PostMapping("/add")
-    public String addProduct(@RequestParam Long id, @RequestParam String title, @RequestParam int cost) {
+    public String addProduct(@RequestParam(required = false) Long id, @RequestParam String title, @RequestParam int cost) {
         Product product = new Product(id, title, cost);
         productService.saveOrUpdate(product);
         return "redirect:/catalogue";

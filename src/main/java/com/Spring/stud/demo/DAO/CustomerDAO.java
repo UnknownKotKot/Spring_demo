@@ -1,8 +1,7 @@
-package com.Spring.stud.demo.repositories;
+package com.Spring.stud.demo.DAO;
 
-import com.Spring.stud.demo.api.IRepository;
-import com.Spring.stud.demo.model.Product;
-
+import com.Spring.stud.demo.api.IEntity;
+import com.Spring.stud.demo.model.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,41 +10,40 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ProductRepositoryDAO implements IRepository<Product> {
-
+public class CustomerDAO implements IEntity<Customer> {
     private SessionFactory sessionFactory;
 
     @Autowired
-    public ProductRepositoryDAO(SessionFactory sessionFactory) {
+    public CustomerDAO(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Product findById(Long id) {
-        try(Session session = sessionFactory.getCurrentSession()){
+    public Customer findById(Long id) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-
-            Product product = session.get(Product.class, id);
+            Customer customer = session.get(Customer.class, id);
             session.getTransaction().commit();
-            return product;
+            return customer;
         }
     }
 
     @Override
-    public List<Product> findAll() {
-        try(Session session = sessionFactory.getCurrentSession()){
+    public List<Customer> findAll() {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            List<Product> products = session.createQuery("from Product", Product.class).getResultList();
+            List<Customer> customers = session.createQuery("from Customer", Customer.class).getResultList();
             session.getTransaction().commit();
-            return products;
+            return customers;
         }
+
     }
 
     @Override
     public void deleteById(Long id) {
         try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            session.createQuery("delete from Product p where p.id = :id")
+            session.createQuery("delete from Customer c where c.id= :id")
                     .setParameter("id", id)
                     .executeUpdate();
             session.getTransaction().commit();
@@ -53,19 +51,14 @@ public class ProductRepositoryDAO implements IRepository<Product> {
     }
 
     @Override
-    public Product saveOrUpdate(Product product) {
-        try(Session session = sessionFactory.getCurrentSession()){
+    public Customer saveOrUpdate(Customer customer) {
+        try (Session session = sessionFactory.getCurrentSession()) {
             session.beginTransaction();
-            Product prod = new Product(product.getId(), product.getTitle(), product.getCost());
-            session.save(prod);
+            Customer c = new Customer(customer.getId(), customer.getName());
+            session.saveOrUpdate(c);
             session.getTransaction().commit();
-            return product;
+            return c;
         }
-    }
-
-    @Override
-    public void save(Product product) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

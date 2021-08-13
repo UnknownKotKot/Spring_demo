@@ -1,6 +1,6 @@
 package com.Spring.stud.demo.services;
 
-import com.Spring.stud.demo.api.IRepository;
+import com.Spring.stud.demo.api.IEntity;
 import com.Spring.stud.demo.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,27 +10,27 @@ import java.util.List;
 
 @Service
 public class ProductServiceDAO {
-    private IRepository<Product> productIRepository;
+    private IEntity<Product> productIEntity;
 
     @Autowired
-    public ProductServiceDAO(@Qualifier("productRepositoryDAO") IRepository<Product> productIRepository) {
-        this.productIRepository = productIRepository;
+    public ProductServiceDAO(@Qualifier("productDAO") IEntity<Product> productIEntity) {
+        this.productIEntity = productIEntity;
     }
 
     public Product findById(Long id) {
-        return productIRepository.findById(id);
+        return productIEntity.findById(id);
     }
 
     public List<Product> findAll() {
-        return productIRepository.findAll();
+        return productIEntity.findAll();
     }
 
     public void deleteById(Long id) {
-        productIRepository.deleteById(id);
+        productIEntity.deleteById(id);
     }
 
     public Product saveOrUpdate(Product product) {
-        return productIRepository.saveOrUpdate(product);
+        return productIEntity.saveOrUpdate(product);
     }
 
 }

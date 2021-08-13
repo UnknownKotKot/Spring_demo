@@ -31,6 +31,7 @@
 <!--        Полная очистка схемы и создание ее по разметке Hibernate. После закрытия Factory выполняется DROP -->
 
         <mapping class="com.Spring.stud.demo.model.Product"/>
-
+        <mapping class="com.Spring.stud.demo.model.Customer"/>
+        <mapping class="com.Spring.stud.demo.model.Order"/>
     </session-factory>
 </hibernate-configuration>

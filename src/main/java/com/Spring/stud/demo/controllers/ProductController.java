@@ -1,58 +1,63 @@
 package com.Spring.stud.demo.controllers;
 
+import com.Spring.stud.demo.dto.ProductDto;
+import com.Spring.stud.demo.model.Category;
 import com.Spring.stud.demo.model.Product;
+import com.Spring.stud.demo.services.CategoryService;
 import com.Spring.stud.demo.services.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import lombok.RequiredArgsConstructor;
 
-@Controller
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
 public class ProductController {
-    private ProductService productService;
+    private final ProductService productService;
+    private final CategoryService categoryService;
 
-    @Autowired
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    @GetMapping("/products")
+    public List<ProductDto> findAll() {
+        return productService.findAll();
     }
 
-    @GetMapping("/catalogue")
-    public String showAllProducts(Model model) {
-        model.addAttribute("products", productService.getAll());
-        return "productCatalogue";
+    @GetMapping("/products/filter/max_price")
+    public List<Product> findAllByMaxPrice(@RequestParam(name = "max_price") int maxPrice) {
+        return productService.findLessPrice(maxPrice);
     }
 
-    @GetMapping("/product/{id}")
-    public String getProductInfo(Model model, @PathVariable Long id) {
-        model.addAttribute("product", productService.getById(id));
-        return "productInfo";
+    @GetMapping("/products/filter/min_price")
+    public List<Product> findAllByMinPrice(@RequestParam(name = "min_price") int minPrice) {
+        return productService.findGreaterPrice(minPrice);
+
     }
 
-    @PostMapping("/add")
-    public String addProduct(@RequestParam Long id, @RequestParam String title, @RequestParam int cost) {
-        Product product = new Product(id, title, cost);
+    @GetMapping("/products/filter/between_price")
+    public List<Product> findAllByMaxPrice(@RequestParam(name = "min_price") int minPrice, @RequestParam(name = "max_price") int maxPrice) {
+        return productService.findBetween(minPrice, maxPrice);
+    }
+
+    @GetMapping("/products/{id}")
+    public ProductDto findById(@PathVariable Long id) {
+        return new ProductDto(productService.findById(id).get());
+    }
+
+    @PostMapping("/products")
+    public ProductDto save(@RequestBody ProductDto productDto) {
+        Product product = new Product();
+        product.setPrice(productDto.getPrice());
+        product.setTitle(productDto.getTitle());
+        Category category = categoryService.findByTitle(productDto.getCategoryTitle()).get();
+        product.setCategory(category);
         productService.save(product);
-        return "redirect:/catalogue";
+        return new ProductDto(product);
     }
 
-    @GetMapping("/add")
-    public String addProduct() {
-        return "addProduct";
-    }
-
-    @GetMapping("/addCost/{id}")
-    public String addCost(@PathVariable Long id) {
-        productService.addCost(id);
-        return "redirect:/product/{id}";
-    }
-
-    @GetMapping("/reduceCost/{id}")
-    public String reduceCost(@PathVariable Long id) {
-        productService.reduceCost(id);
-        return "redirect:/product/{id}";
+    @GetMapping("/products/delete/{id}")
+    public String deleteById(@PathVariable Long id) {
+        productService.deleteById(id);
+        return "deleted successfully";
     }
 
 }

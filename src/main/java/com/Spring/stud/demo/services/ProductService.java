@@ -1,40 +1,53 @@
 package com.Spring.stud.demo.services;
 
-import com.Spring.stud.demo.api.IRepository;
+import com.Spring.stud.demo.api.ProductRepository;
+import com.Spring.stud.demo.dto.ProductDto;
 import com.Spring.stud.demo.model.Product;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    private IRepository<Product> productRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    public ProductService(IRepository<Product> productRepository) {
-        this.productRepository = productRepository;
+    public List<ProductDto> findAll() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product p: products) {
+            productDtos.add(new ProductDto(p));
+        }
+        return productDtos;
     }
 
-    public List<Product> getAll() {
-        return productRepository.getAll();
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
     }
 
-    public void save(Product product) {
-        productRepository.save(product);
+    public Product save(Product product) {
+        return productRepository.save(product);
     }
 
-    public Product getById(Long id) {
-        return productRepository.getById(id);
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
     }
 
-    public void addCost(Long id) {
-        productRepository.addCost(id);
+    public List<Product> findGreaterPrice(int minPrice) {
+        return productRepository.findAllByPriceGreaterThanEqual(minPrice);
     }
 
-    public void reduceCost(Long id) {
-        productRepository.reduceCost(id);
+    public List<Product> findLessPrice(int maxPrice) {
+        return productRepository.findAllByPriceLessThanEqual(maxPrice);
     }
 
+    public List<Product> findBetween(int minPrice, int maxPrice) {
+        return productRepository.findAllByPriceBetween(minPrice, maxPrice);
+    }
 
 }

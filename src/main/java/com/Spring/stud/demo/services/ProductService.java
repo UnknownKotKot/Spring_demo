@@ -5,6 +5,8 @@ import com.Spring.stud.demo.dto.ProductDto;
 import com.Spring.stud.demo.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,13 +19,8 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public List<ProductDto> findAll() {
-        List<Product> products = productRepository.findAll();
-        List<ProductDto> productDtos = new ArrayList<>();
-        for (Product p: products) {
-            productDtos.add(new ProductDto(p));
-        }
-        return productDtos;
+    public Page<ProductDto> findAll(int pageIndex, int pageSize) {
+        return productRepository.findAll(PageRequest.of(pageIndex, pageSize)).map(ProductDto::new);
     }
 
     public Optional<Product> findById(Long id) {

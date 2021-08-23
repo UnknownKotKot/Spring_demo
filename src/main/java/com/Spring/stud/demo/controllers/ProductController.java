@@ -7,6 +7,7 @@ import com.Spring.stud.demo.services.CategoryService;
 import com.Spring.stud.demo.services.ProductService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class ProductController {
     private final CategoryService categoryService;
 
     @GetMapping("/products")
-    public List<ProductDto> findAll() {
-        return productService.findAll();
+    public Page<ProductDto> findAll(@RequestParam(defaultValue = "0", name = "p") int pageIndex, @RequestParam(defaultValue = "10", name = "s") int pageSize) {
+        return productService.findAll(pageIndex, pageSize);
     }
 
     @GetMapping("/products/filter/max_price")
@@ -55,9 +56,8 @@ public class ProductController {
     }
 
     @GetMapping("/products/delete/{id}")
-    public String deleteById(@PathVariable Long id) {
+    public void deleteById(@PathVariable Long id) {
         productService.deleteById(id);
-        return "deleted successfully";
     }
 
 }

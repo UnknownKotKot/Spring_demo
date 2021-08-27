@@ -4,13 +4,10 @@ import com.Spring.stud.demo.api.ProductRepository;
 import com.Spring.stud.demo.dto.ProductDto;
 import com.Spring.stud.demo.model.Product;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

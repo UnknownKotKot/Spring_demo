@@ -1,0 +1,45 @@
+<div>
+    <h1>Catalogue</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <td>id</td>
+            <td>title</td>
+            <td>price</td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat = "p in products">
+            <td>
+                <button class="btn btn-danger" ng-click = "updateProduct(p.id)">update</button>
+            </td>
+            <td>{{p.id}}</td>
+            <td>{{p.title}}</td>
+            <td>{{p.price}}</td>
+            <td>
+                <button class="btn btn-danger" ng-click = "addToCart(p.id)">add to cart</button>
+            </td>
+            <td>
+                <button class="btn btn-primary" ng-click = "showInfo(p)">info</button>
+            </td>
+            <td>
+                <button class="btn btn-danger" ng-click = "deleteProduct(p.id)">delete from base</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item" ng-repeat="pageIndex in paginationArray">
+                <button class="page-link" ng-click="loadProducts(pageIndex-1)">{{pageIndex}}</button>
+            </li>
+        </ul>
+    </nav>
+    <p></p>
+    <h3>  </h3>
+    <button type = "submit" class = "btn btn-primary" ng-click = "prevPage()">- page</button>
+    <button type = "submit" class = "btn btn-primary" ng-click = "nextPage()">+ page</button>
+</div>

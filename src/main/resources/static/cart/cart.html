@@ -1,0 +1,32 @@
+<div>
+    <h1>Cart</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <td>id</td>
+            <td>title</td>
+            <td>price</td>
+            <td>Type</td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat = "p in cart">
+            <td>{{p.id}}</td>
+            <td>{{p.title}}</td>
+            <td>{{p.price}}</td>
+            <td>{{p.categoryTitle}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click = "showInfo(p)">info</button>
+            </td>
+            <td>
+                <button class="btn btn-danger" ng-click = "deleteProduct(p.id)">delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+
+
+
+</div>

@@ -1,6 +1,6 @@
 (function () {
     angular
-        .module('market-app', ['ngRoute'])
+        .module('market-app', ['ngRoute', 'ngStorage'])
         .config(config)
         .run(run);
 
@@ -26,15 +26,61 @@
                 templateUrl: 'cart/cart.html',
                 controller: 'cartController'
             })
+            .when('/registration', {
+                templateUrl: 'regPage/regPage.html',
+                controller: 'userRegController'
+            })
             .otherwise({
                 redirectTo: '/'
             });
     }
 
-    function run($rootScope, $http) {
+    function run($rootScope, $http, $localStorage) {
+        if ($localStorage.webMarketUser) {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.webMarketUser.token;
+        }
     }
 })();
-angular.module('market-app').controller('indexController', function ($rootScope, $scope, $http) {
+
+angular.module('market-app').controller('indexController', function ($rootScope, $scope, $http, $localStorage, $location) {
     console.log('index');
-    const contextPath = 'http://localhost:8189/market/api/v1/';
+    const contextPath = 'http://localhost:8189/market/';
+
+    $scope.tryToAuth = function () {
+        $http.post(contextPath + 'auth', $scope.user)
+            .then(function successCallback(response) {
+                if (response.data.token) {
+                    $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
+                    $localStorage.webMarketUser = {username: $scope.user.username, token: response.data.token};
+
+                    $scope.user.username = null;
+                    $scope.user.password = null;
+                    $location.path('/catalogue');
+                }
+            }, function errorCallback(response) {
+            });
+    };
+
+    $scope.tryToLogout = function () {
+        $scope.clearUser();
+        if ($scope.user.username) {
+            $scope.user.username = null;
+        }
+        if ($scope.user.password) {
+            $scope.user.password = null;
+        }
+    };
+
+    $scope.clearUser = function () {
+        delete $localStorage.webMarketUser;
+        $http.defaults.headers.common.Authorization = '';
+    };
+
+    $rootScope.isUserLoggedIn = function () {
+        if ($localStorage.webMarketUser) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 });

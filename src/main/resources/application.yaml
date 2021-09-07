@@ -20,3 +20,7 @@ spring:
         web-allow-others: false
 # To See H2 Console in Browser:
 # http://localhost:{port}{context-path}/h2-console
+
+jwt:
+  secret: oifh4309f8h324098fh4398gh8h*&TG*#&Gg97rgff98gf983h4f983h487g*&^F&Fu3r
+  lifetime: 36000000

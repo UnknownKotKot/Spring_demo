@@ -36,6 +36,7 @@ public class ProductController {
     @PutMapping()
     public void update(@RequestBody ProductDto productDto) {
         Long id = productDto.getId();
+        //TODO rework code below
         if (productService.findById(id).isPresent()) {
             String title = productDto.getTitle();
             int price = productDto.getPrice();

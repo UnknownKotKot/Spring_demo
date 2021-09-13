@@ -30,6 +30,10 @@
                 templateUrl: 'regPage/regPage.html',
                 controller: 'userRegController'
             })
+            .when('/orderConfirm', {
+                templateUrl: 'orderConfirm/orderConfirm.html',
+                controller: 'orderConfirmController'
+            })
             .otherwise({
                 redirectTo: '/'
             });

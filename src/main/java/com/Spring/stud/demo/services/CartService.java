@@ -1,45 +1,51 @@
 package com.Spring.stud.demo.services;
 
 import com.Spring.stud.demo.controllers.exceptions.ResourceNotFoundException;
-import com.Spring.stud.demo.model.Cart;
+import com.Spring.stud.demo.utils.Cart;
 import com.Spring.stud.demo.model.Product;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.annotation.PostConstruct;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
     private Cart cart;
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    public CartService(Cart cart, ProductService productService) {
-        this.cart = cart;
-        this.productService = productService;
+    @PostConstruct
+    public void init() {
+    this.cart = new Cart();
     }
 
     public void addProduct(Long id) {
-        cart.addToCart(productService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product id = " + id + " not found!")));
+        if (cart.addToCart(id)) {
+            return;
+        }
+        Product product = productService.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Failed to add product due to wrong or missed product ID"));
+        cart.addToCart(product);
     }
 
     public void deleteById(Long id) {
         cart.deleteFromCart(id);
     }
 
+    public void reduceById(Long id) {
+        cart.reduce(id);
+    }
+
     public void deleteAllProducts() {
         cart.flushCart();
     }
 
-    public Product findById(Long id) {
-        return cart.findById(id);
+    public Cart getCartForCurrentUser() {
+        return cart;
     }
 
-    public List<Product> findAll() {
-        return cart.findAll();
+    public void clearCart() {
+        cart.flushCart();
     }
 
 }

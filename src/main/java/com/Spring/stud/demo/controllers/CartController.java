@@ -1,32 +1,19 @@
 package com.Spring.stud.demo.controllers;
 
-import com.Spring.stud.demo.dto.ProductDto;
+import com.Spring.stud.demo.utils.Cart;
 import com.Spring.stud.demo.services.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @RestController
 @RequestMapping("/api/v1/cart")
+@RequiredArgsConstructor
 public class CartController {
-    private CartService cartService;
+    private final CartService cartService;
 
-    @Autowired
-    public void setCartService(CartService cartService) {
-        this.cartService = cartService;
-    }
-
-    @GetMapping("/")
-    public List<ProductDto> findAll() {
-        return cartService.findAll().stream().map(ProductDto::new).collect(Collectors.toList());
-    }
-
-    @GetMapping("/{id}")
-    public ProductDto findById(@PathVariable Long id) {
-        return new ProductDto(cartService.findById(id));
+    @GetMapping
+    public Cart getCartForCurrentUser() {
+        return cartService.getCartForCurrentUser();
     }
 
     @GetMapping("add/{id}")
@@ -37,6 +24,11 @@ public class CartController {
     @GetMapping("delete/{id}")
     public void deleteById(@PathVariable Long id) {
         cartService.deleteById(id);
+    }
+
+    @GetMapping("reduce/{id}")
+    public void reduceById(@PathVariable Long id) {
+        cartService.reduceById(id);
     }
 
     @GetMapping("delete/all")

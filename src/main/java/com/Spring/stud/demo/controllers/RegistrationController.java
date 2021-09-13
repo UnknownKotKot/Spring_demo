@@ -15,15 +15,15 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class RegistrationController {
     private final RegistrationService registrationService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping()
     public User save(@RequestBody User user) {
+        //TODO get role from DB - do not make new one
         Role userRole = new Role();
         userRole.setRoleName("ROLE_USER");
         Collection<Role> roleList = new ArrayList<>();
         roleList.add(userRole);
-
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String newPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
         User newUser = new User();

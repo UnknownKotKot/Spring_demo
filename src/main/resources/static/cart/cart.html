@@ -1,32 +1,38 @@
 <div>
     <h1>Cart</h1>
-    <table class="table">
+    <span ng-show="cart.orderItems.length == 0"> Cart is empty</span>
+    <table class="table" ng-show="cart.orderItems.length > 0">
         <thead>
         <tr>
-            <td>id</td>
             <td>title</td>
+            <td>count</td>
             <td>price</td>
-            <td>Type</td>
             <td></td>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat = "p in cart">
-            <td>{{p.id}}</td>
-            <td>{{p.title}}</td>
-            <td>{{p.price}}</td>
-            <td>{{p.categoryTitle}}</td>
+        <tr ng-repeat = "i in cart.orderItems">
             <td>
-                <button class="btn btn-primary" ng-click = "showInfo(p)">info</button>
+                <button class="btn btn-primary" ng-click = "showInfo(i.productId)">info</button>
+                {{i.productTitle}}
             </td>
             <td>
-                <button class="btn btn-danger" ng-click = "deleteProduct(p.id)">delete</button>
+                <button class="btn btn-primary" ng-click = "reduceCount(i.productId)">-</button>
+                {{i.quantity}}
+                <button class="btn btn-primary" ng-click = "increaseCount(i.productId)">+</button>
+            </td>
+            <td>
+                {{i.unitPrice + ' x ' + i.quantity + ' = ' + i.fullPrice}}
+            </td>
+            <td>
+                <button class="btn btn-danger" ng-click = "deleteProduct(i.productId)">delete</button>
             </td>
         </tr>
+        <tr>
+            <td>{{'Total price: ' + cart.fullPrice}}</td>
         </tbody>
     </table>
     <p></p>
-
-
-
+    <button class="button btn-primary" ng-click="checkOut()" ng-show="isUserLoggedIn() && cart.orderItems.length > 0">Make order</button>
+    <button class="button btn-secondary" ng-click="disabledCheckOut()" ng-show="!isUserLoggedIn() && cart.orderItems.length > 0">Make order</button>
 </div>

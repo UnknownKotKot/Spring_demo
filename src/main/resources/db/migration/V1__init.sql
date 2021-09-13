@@ -93,8 +93,8 @@ values
 (2, 'B');
 
 create table roles_privileges (
-    role_id             bigint not null,
-    privilege_id        bigint not null,
+    role_id                     bigint not null,
+    privilege_id                bigint not null,
     primary key (role_id, privilege_id ),
     foreign key (role_id) references roles (id),
     foreign key (privilege_id) references privileges (id)
@@ -105,3 +105,28 @@ values
 (1, 1),
 (2, 1),
 (2, 2);
+
+create table orders (
+                        order_id        bigserial,
+                        order_title     varchar(255),
+                        order_price     bigint,
+                        tel_number      varchar(255),
+                        address         varchar(255),
+                        created_at      timestamp default current_timestamp,
+                        updated_at      timestamp default current_timestamp,
+                        primary key (order_id)
+);
+create table order_items (
+                             id     bigserial,
+                             product_id       bigint          references products (id),
+                             product_title    varchar(255)    references products (title),
+                             quantity         bigint,
+                             unit_price       bigint,
+                             full_price       bigint,
+                             order_id bigint references orders (order_id),
+                             created_at timestamp default current_timestamp,
+                             updated_at timestamp default current_timestamp,
+                             primary key (id)
+);
+
+

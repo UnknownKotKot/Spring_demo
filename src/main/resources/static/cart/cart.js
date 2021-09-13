@@ -1,9 +1,9 @@
-angular.module('market-app').controller('cartController', function ($scope, $http) {
+angular.module('market-app').controller('cartController', function ($scope, $http, $location) {
     console.log('cart');
     const contextPath = 'http://localhost:8189/market/api/v1/';
     let currentResponseLog = null;
 
-    $scope.loadProducts = function () {
+    $scope.loadCart = function () {
         $http.get(contextPath + 'cart/')
             .then(function (response) {
                 console.log(response);
@@ -13,20 +13,46 @@ angular.module('market-app').controller('cartController', function ($scope, $htt
     };
 
     $scope.showInfo = function (productId) {
-        alert(productId.categoryTitle);
+        alert('Product id: ' + productId);
     };
 
+    $scope.increaseCount = function (productId) {
+        $http.get(contextPath + 'cart/add/' + productId)
+            .then(function successCallback(response) {
+                console.log(response);
+                $scope.loadCart();
+                }, function failureCallback(response) {
+                alert(response.data.message);
+            });
+    }
+
+    $scope.reduceCount = function (productId) {
+        $http.get(contextPath + 'cart/reduce/' + productId)
+            .then(function successCallback(response) {
+                console.log(response);
+                $scope.loadCart();
+            }, function failureCallback(response) {
+                alert(response.data.message);
+            });
+    }
 
     $scope.deleteProduct = function (productId) {
         $http.get(contextPath + 'cart/delete/' + productId)
             .then(function successCallback(response) {
                 console.log(response);
-                $scope.loadProducts();
+                $scope.loadCart();
             }, function failureCallback(response) {
                 alert(response.data.message);
             });
         alert('product with id: ' + productId + ' - deleted successfully');
     }
 
-    $scope.loadProducts();
+    $scope.checkOut = function () {
+        $location.path("/orderConfirm");
+    }
+    $scope.disabledCheckOut = function () {
+        alert("For order please log in");
+    }
+
+    $scope.loadCart();
 });

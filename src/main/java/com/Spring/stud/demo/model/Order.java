@@ -13,13 +13,28 @@ import java.util.List;
 @Table(name = "orders")
 @Data
 @NoArgsConstructor
+@NamedEntityGraph(
+        name = "orders.for-front",
+        attributeNodes = {
+                @NamedAttributeNode(value = "orderItemList", subgraph = "orderItemList-products")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "orderItemList-products",
+                        attributeNodes = {
+                                @NamedAttributeNode("product")
+                        }
+                )
+        }
+)
 public class Order {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long id;
 
-    @Column(name = "order_title")
-    private String orderTitle;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "order_price")
     private int orderPrice;
@@ -30,7 +45,7 @@ public class Order {
     @Column(name = "address")
     private String address;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.ALL})
     private List<OrderItem> orderItemList;
 
     @CreationTimestamp

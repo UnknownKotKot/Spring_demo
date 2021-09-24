@@ -33,6 +33,6 @@ public class CartController {
 
     @GetMapping("delete/all")
     public void deleteAll() {
-        cartService.deleteAllProducts();
+        cartService.clearCart();
     }
 }

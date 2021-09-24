@@ -18,11 +18,9 @@ public class OrderItem {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "product_id")
-    private Long productId;
-
-    @Column(name = "product_title")
-    private String productTitle;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Column(name = "quantity")
     private int quantity;

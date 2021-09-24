@@ -1,5 +1,6 @@
 package com.Spring.stud.demo.dto;
 
+import com.Spring.stud.demo.model.OrderItem;
 import com.Spring.stud.demo.model.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,14 @@ public class OrderItemDto {
         this.quantity = 1;
         this.unitPrice = product.getPrice();
         this.fullPrice = product.getPrice();
+    }
+
+    public OrderItemDto(OrderItem orderItem) {
+        this.productId = orderItem.getProduct().getId();
+        this.productTitle = orderItem.getProduct().getTitle();
+        this.quantity = orderItem.getQuantity();
+        this.unitPrice = orderItem.getUnitPrice();
+        this.fullPrice = orderItem.getFullPrice();
     }
 
     public void changeQuantity(int  multiplier) {

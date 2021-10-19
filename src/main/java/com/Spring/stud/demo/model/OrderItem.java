@@ -25,11 +25,11 @@ public class OrderItem {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "unit_price")
-    private int unitPrice;
+    @Column(name = "price_per_product")
+    private int pricePerProduct;
 
-    @Column(name = "full_price")
-    private int fullPrice;
+    @Column(name = "price")
+    private int price;
 
     @ManyToOne
     @JoinColumn(name = "order_id")

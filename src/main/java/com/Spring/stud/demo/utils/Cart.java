@@ -11,20 +11,20 @@ import java.util.List;
 
 @Data
 public class Cart {
-    private List<OrderItemDto> orderItems;
-    private int fullPrice;
+    private List<OrderItemDto> items;
+    private int totalPrice;
 
     public Cart() {
-        this.orderItems = new ArrayList<>();
+        this.items = new ArrayList<>();
     }
 
     public void addToCart(Product product) {
-        orderItems.add(new OrderItemDto(product));
+        items.add(new OrderItemDto(product));
         refreshFullPrice();
     }
 
     public boolean addToCart(Long id) {
-        for (OrderItemDto i : orderItems) {
+        for (OrderItemDto i : items) {
             if (i.getProductId().equals(id)) {
                 i.changeQuantity(1);
                 refreshFullPrice();
@@ -35,7 +35,7 @@ public class Cart {
     }
 
     public void reduce(Long id) {
-        Iterator<OrderItemDto> iterator = orderItems.iterator();
+        Iterator<OrderItemDto> iterator = items.iterator();
         while (iterator.hasNext()) {
             OrderItemDto i = iterator.next();
             if (i.getProductId().equals(id)) {
@@ -50,26 +50,42 @@ public class Cart {
     }
 
     public void deleteFromCart(Long id) {
-        orderItems.removeIf(i->i.getProductId().equals(id));
+        items.removeIf(i->i.getProductId().equals(id));
         refreshFullPrice();
     }
 
     public void refreshFullPrice() {
-        fullPrice = 0;
-        for (OrderItemDto i : orderItems) {
-            fullPrice += i.getFullPrice();
+        totalPrice = 0;
+        for (OrderItemDto i : items) {
+            totalPrice += i.getPrice();
         }
     }
 
     public void flushCart() {
-        orderItems.clear();
-        fullPrice = 0;
+        items.clear();
+        totalPrice = 0;
     }
 
     public List<OrderItemDto> findAll() {
-        return orderItems;
+        return items;
     }
 
-
+    public void merge(Cart another) {
+        for (OrderItemDto anotherItem : another.items) {
+            boolean merged = false;
+            for (OrderItemDto myItem : items) {
+                if (myItem.getProductId().equals(anotherItem.getProductId())) {
+                    myItem.changeQuantity(anotherItem.getQuantity());
+                    merged = true;
+                    break;
+                }
+            }
+            if (!merged) {
+                items.add(anotherItem);
+            }
+        }
+        refreshFullPrice();
+        another.flushCart();
+    }
 
 }

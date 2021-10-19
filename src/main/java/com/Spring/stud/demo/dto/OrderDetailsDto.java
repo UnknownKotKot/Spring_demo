@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class OrderDetailsDto {
-    private String phoneNumber;
+    private String phone;
     private String address;
 }

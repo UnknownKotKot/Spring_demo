@@ -11,23 +11,23 @@ public class OrderItemDto {
     private Long productId;
     private String productTitle;
     private int quantity;
-    private int unitPrice;
-    private int fullPrice;
+    private int pricePerProduct;
+    private int price;
 
     public OrderItemDto(Product product) {
         this.productId = product.getId();
         this.productTitle = product.getTitle();
         this.quantity = 1;
-        this.unitPrice = product.getPrice();
-        this.fullPrice = product.getPrice();
+        this.pricePerProduct = product.getPrice();
+        this.price = product.getPrice();
     }
 
     public OrderItemDto(OrderItem orderItem) {
         this.productId = orderItem.getProduct().getId();
         this.productTitle = orderItem.getProduct().getTitle();
         this.quantity = orderItem.getQuantity();
-        this.unitPrice = orderItem.getUnitPrice();
-        this.fullPrice = orderItem.getFullPrice();
+        this.pricePerProduct = orderItem.getPricePerProduct();
+        this.price = orderItem.getPrice();
     }
 
     public void changeQuantity(int  multiplier) {
@@ -35,6 +35,6 @@ public class OrderItemDto {
         if (quantity<0) {
             quantity = 0;
         }
-        fullPrice = unitPrice * quantity;
+        price = pricePerProduct * quantity;
     }
 }

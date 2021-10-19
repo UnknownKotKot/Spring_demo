@@ -11,16 +11,16 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class OrderDto {
     private Long id;
-    private List<OrderItemDto> orderItemList;
-    private int orderPrice;
-    private String telNumber;
+    private List<OrderItemDto> items;
+    private int price;
+    private String phone;
     private String address;
 
     public OrderDto(Order order) {
         this.id = order.getId();
-        this.orderItemList = order.getOrderItemList().stream().map(OrderItemDto::new).collect(Collectors.toList());
-        this.orderPrice = order.getOrderPrice();
-        this.telNumber = order.getTelNumber();
+        this.items = order.getItems().stream().map(OrderItemDto::new).collect(Collectors.toList());
+        this.price = order.getPrice();
+        this.phone = order.getPhone();
         this.address = order.getAddress();
     }
 }

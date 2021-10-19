@@ -1,23 +1,33 @@
 package com.Spring.stud.demo.services;
 
 import com.Spring.stud.demo.api.ProductRepository;
+import com.Spring.stud.demo.api.specifications.ProductSpecifications;
+import com.Spring.stud.demo.controllers.exceptions.ResourceNotFoundException;
 import com.Spring.stud.demo.dto.ProductDto;
+import com.Spring.stud.demo.model.Category;
 import com.Spring.stud.demo.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
 
-    public Page<ProductDto> findAll(int pageIndex, int pageSize) {
-        return productRepository.findAll(PageRequest.of(pageIndex, pageSize)).map(ProductDto::new);
+    private static final String FILTER_MIN_PRICE = "min_price";
+    private static final String FILTER_MAX_PRICE = "max_price";
+    private static final String FILTER_TITLE = "title";
+
+    public Page<Product> findAll(int pageIndex, int pageSize, MultiValueMap<String, String> rqParams) {
+        return productRepository.findAll(constructSpecification(rqParams), PageRequest.of(pageIndex, pageSize));
     }
 
     public Optional<Product> findById(Long id) {
@@ -28,24 +38,35 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public void deleteById(Long id) {
-        productRepository.deleteById(id);
+    @Transactional
+    public void updateProductFromDto(ProductDto productDto) {
+        Product product = findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Product id = " + productDto.getId() + " not found"));
+        product.setPrice(productDto.getPrice());
+        product.setTitle(productDto.getTitle());
+        if (!product.getCategory().getTitle().equals(productDto.getCategoryTitle())) {
+            Category category = categoryService.findByTitle(productDto.getCategoryTitle()).orElseThrow(() -> new ResourceNotFoundException("Category title = " + productDto.getCategoryTitle() + " not found"));
+            product.setCategory(category);
+        }
     }
 
-    public List<Product> findGreaterPrice(int minPrice) {
-        return productRepository.findAllByPriceGreaterThanEqual(minPrice);
-    }
-
-    public List<Product> findLessPrice(int maxPrice) {
-        return productRepository.findAllByPriceLessThanEqual(maxPrice);
-    }
-
-    public List<Product> findBetween(int minPrice, int maxPrice) {
-        return productRepository.findAllByPriceBetween(minPrice, maxPrice);
-    }
-
-    public Optional<Product> findByTitle (String title) {
+    public Optional<Product> findByTitle(String title) {
         return productRepository.findByTitle(title);
     }
 
+    private Specification<Product> constructSpecification(MultiValueMap<String, String> params) {
+        Specification<Product> spec = Specification.where(null);
+        if (params.containsKey(FILTER_MIN_PRICE) && !params.getFirst(FILTER_MIN_PRICE).isBlank()) {
+            int minPrice = Integer.parseInt(params.getFirst(FILTER_MIN_PRICE));
+            spec = spec.and(ProductSpecifications.priceGreaterOrEqualsThan(minPrice));
+        }
+        if (params.containsKey(FILTER_MAX_PRICE) && !params.getFirst(FILTER_MAX_PRICE).isBlank()) {
+            int maxPrice = Integer.parseInt(params.getFirst(FILTER_MAX_PRICE));
+            spec = spec.and(ProductSpecifications.priceLesserOrEqualsThan(maxPrice));
+        }
+        if (params.containsKey(FILTER_TITLE) && !params.getFirst(FILTER_TITLE).isBlank()) {
+            String title = params.getFirst(FILTER_TITLE);
+            spec = spec.and(ProductSpecifications.titleLike(title));
+        }
+        return spec;
+    }
 }

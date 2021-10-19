@@ -26,7 +26,6 @@ public class CategoryService {
 
     public Optional<Category> findByIdWithProducts(Long id) {
         return categoryRepository.findByIdWithProducts(id);
-
     }
 }
 

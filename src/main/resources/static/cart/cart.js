@@ -1,10 +1,10 @@
-angular.module('market-app').controller('cartController', function ($scope, $http, $location) {
+angular.module('market-app').controller('cartController', function ($scope, $http, $location, $localStorage) {
     console.log('cart');
     const contextPath = 'http://localhost:8189/market/api/v1/';
     let currentResponseLog = null;
 
     $scope.loadCart = function () {
-        $http.get(contextPath + 'cart/')
+        $http.get(contextPath + 'cart/' + $localStorage.webMarketGuestCartId)
             .then(function (response) {
                 console.log(response);
                 $scope.cart = response.data;
@@ -12,12 +12,8 @@ angular.module('market-app').controller('cartController', function ($scope, $htt
             });
     };
 
-    $scope.showInfo = function (productId) {
-        alert('Product id: ' + productId);
-    };
-
     $scope.increaseCount = function (productId) {
-        $http.get(contextPath + 'cart/add/' + productId)
+        $http.get(contextPath + 'cart/' + $localStorage.webMarketGuestCartId +'/add/' + productId )
             .then(function successCallback(response) {
                 console.log(response);
                 $scope.loadCart();
@@ -27,7 +23,7 @@ angular.module('market-app').controller('cartController', function ($scope, $htt
     }
 
     $scope.reduceCount = function (productId) {
-        $http.get(contextPath + 'cart/reduce/' + productId)
+        $http.get(contextPath + 'cart/' + $localStorage.webMarketGuestCartId + '/reduce/' + productId)
             .then(function successCallback(response) {
                 console.log(response);
                 $scope.loadCart();
@@ -37,7 +33,7 @@ angular.module('market-app').controller('cartController', function ($scope, $htt
     }
 
     $scope.deleteProduct = function (productId) {
-        $http.get(contextPath + 'cart/delete/' + productId)
+        $http.get(contextPath + 'cart/' + $localStorage.webMarketGuestCartId + '/remove/' + productId)
             .then(function successCallback(response) {
                 console.log(response);
                 $scope.loadCart();

@@ -24,9 +24,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/api/v1/profile/**").authenticated()
+                .antMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .antMatchers("/api/v1/users/me").authenticated()
+                .antMatchers("/api/v1/users/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/auth_page/**").authenticated()
                 .antMatchers("/user_info").authenticated()
-                .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
+//                .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
                 .antMatchers("/test/a/**").hasAnyAuthority("A")
                 .antMatchers("/test/b/**").hasAnyAuthority("B")
                 .anyRequest().permitAll()

@@ -1,9 +1,9 @@
 create table categories
 (
     id              bigserial primary key,
+    title           varchar(255),
     created_at      timestamp default current_timestamp,
-    updated_at      timestamp default current_timestamp,
-    title           varchar(255)
+    updated_at      timestamp default current_timestamp
 );
 insert into categories (title)
 values ('Food'),
@@ -14,10 +14,11 @@ create table products
     id              bigserial primary key,
     title           varchar(255),
     price           int,
+    category_id     bigint references categories (id),
     created_at      timestamp default current_timestamp,
-    updated_at      timestamp default current_timestamp,
-    category_id     bigint references categories (id)
+    updated_at      timestamp default current_timestamp
 );
+
 insert into products (title, price, category_id)
 values
 ('Bread', 25, 1),
@@ -43,6 +44,8 @@ values
 
 create table users (
     id                  bigserial,
+    first_name          varchar(80) not null,
+    last_name           varchar(80) not null,
     username            varchar(30) not null unique,
     password            varchar(80) not null,
     email               varchar(50) unique,
@@ -51,11 +54,11 @@ create table users (
     primary key (id)
 );
 
-insert into users (username, password, email)
+insert into users (username, first_name, last_name, password, email)
 values
-('user0', '$2a$12$hzUtHGx1y0QNeFyF7j2vKePDyS2CIvsDD96PIBydjIbNZvtqRhjja', 'user0@email.com'),
-('user1', '$2a$12$hzUtHGx1y0QNeFyF7j2vKePDyS2CIvsDD96PIBydjIbNZvtqRhjja', 'user1@email.com'),
-('user2', '$2a$12$hzUtHGx1y0QNeFyF7j2vKePDyS2CIvsDD96PIBydjIbNZvtqRhjja', 'user2@email.com');
+('user0', 'name0', 'name00', '$2a$12$hzUtHGx1y0QNeFyF7j2vKePDyS2CIvsDD96PIBydjIbNZvtqRhjja', 'user0@email.com'),
+('user1', 'name1', 'name11', '$2a$12$hzUtHGx1y0QNeFyF7j2vKePDyS2CIvsDD96PIBydjIbNZvtqRhjja', 'user1@email.com'),
+('user2', 'name2', 'name22', '$2a$12$hzUtHGx1y0QNeFyF7j2vKePDyS2CIvsDD96PIBydjIbNZvtqRhjja', 'user2@email.com');
 
 create table roles (
     id                  serial,
@@ -67,7 +70,8 @@ create table roles (
 
 insert into roles (role_name)
 values
-('ROLE_USER'), ('ROLE_ADMIN');
+('ROLE_USER'),
+('ROLE_ADMIN');
 
 create table users_roles (
     user_id     bigint not null,
@@ -83,38 +87,11 @@ values
 (2, 1),
 (3, 2);
 
-create table privileges (
-    id     bigserial,
-    p_name     varchar(50) not null,
-    created_at timestamp default current_timestamp,
-    updated_at timestamp default current_timestamp,
-    primary key (id)
-);
-
-insert into privileges(id, p_name)
-values
-(1, 'A'),
-(2, 'B');
-
-create table roles_privileges (
-    role_id                     bigint not null,
-    privilege_id                bigint not null,
-    primary key (role_id, privilege_id ),
-    foreign key (role_id) references roles (id),
-    foreign key (privilege_id) references privileges (id)
-);
-
-insert into roles_privileges(role_id, privilege_id)
-values
-(1, 1),
-(2, 1),
-(2, 2);
-
 create table orders (
     id              bigserial,
     user_id         bigint references users(id),
-    order_price     integer,
-    tel_number      varchar(255),
+    price     integer,
+    phone      varchar(255),
     address         varchar(255),
     created_at      timestamp default current_timestamp,
     updated_at      timestamp default current_timestamp,
@@ -125,17 +102,17 @@ create table order_items (
     order_id          bigint references orders (id),
     product_id        bigint references products (id),
     quantity        integer,
-    unit_price      integer,
-    full_price      integer,
+    price_per_product      integer,
+    price      integer,
     created_at timestamp default current_timestamp,
     updated_at timestamp default current_timestamp,
     primary key (id)
 );
 
-insert into orders (user_id, address, tel_number, order_price)
+insert into orders (user_id, address, phone, price)
 values (1, '1111', '1111', 100);
 
-insert into order_items (order_id, product_id, quantity, unit_price, full_price)
+insert into order_items (order_id, product_id, quantity, price_per_product, price)
 values (1, 1, 4, 25, 100);
 
 

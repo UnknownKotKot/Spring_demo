@@ -20,14 +20,6 @@ public class Role {
     @Column(name = "role_name")
     private String roleName;
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST
-    })
-    @JoinTable(name = "roles_privileges",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "privilege_id"))
-    private Collection<Privilege> privileges;
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;

@@ -16,11 +16,11 @@ import java.util.List;
 @NamedEntityGraph(
         name = "orders.for-front",
         attributeNodes = {
-                @NamedAttributeNode(value = "orderItemList", subgraph = "orderItemList-products")
+                @NamedAttributeNode(value = "items", subgraph = "items-products")
         },
         subgraphs = {
                 @NamedSubgraph(
-                        name = "orderItemList-products",
+                        name = "items-products",
                         attributeNodes = {
                                 @NamedAttributeNode("product")
                         }
@@ -36,17 +36,17 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "order_price")
-    private int orderPrice;
+    @Column(name = "price")
+    private int price;
 
-    @Column(name = "tel_number")
-    private String telNumber;
+    @Column(name = "phone")
+    private String phone;
 
     @Column(name = "address")
     private String address;
 
     @OneToMany(mappedBy = "order", cascade = {CascadeType.ALL})
-    private List<OrderItem> orderItemList;
+    private List<OrderItem> items;
 
     @CreationTimestamp
     @Column(name = "created_at")

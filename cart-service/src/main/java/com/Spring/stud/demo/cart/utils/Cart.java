@@ -26,6 +26,7 @@ public class Cart {
             }
         }
         items.add(new OrderItemDto(product.getId(), product.getTitle(), 1, product.getPrice(), product.getPrice()));
+        recalculate();
     }
 
     public void decrement(Long productId) {

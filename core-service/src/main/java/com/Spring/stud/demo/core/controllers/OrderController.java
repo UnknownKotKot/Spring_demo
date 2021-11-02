@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +20,13 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createOrder(@RequestBody OrderDetailsDto orderDetailsDto, Principal principal) {
-        orderService.createOrder(principal, orderDetailsDto);
+    public void createOrder(@RequestBody OrderDetailsDto orderDetailsDto, @RequestHeader String username) {
+        orderService.createOrder(username, orderDetailsDto);
     }
 
     @GetMapping
-    public List<OrderDto> getOrdersForCurrentUser(Principal principal) {
+    public List<OrderDto> getOrdersForCurrentUser(@RequestHeader String username) {
 
-        return orderService.findAllByUsername(principal.getName()).stream().map(o -> converter.orderToDto(o)).collect(Collectors.toList());
+        return orderService.findAllByUsername(username).stream().map(o -> converter.orderToDto(o)).collect(Collectors.toList());
     }
 }

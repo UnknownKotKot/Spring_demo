@@ -45,7 +45,7 @@ create table users
     id         bigserial primary key,
     first_name varchar(80) not null,
     last_name  varchar(80) not null,
-    username   varchar(30) not null,
+    username   varchar(30) not null unique,
     password   varchar(80) not null,
     email      varchar(50) unique,
     created_at timestamp default current_timestamp,
@@ -82,7 +82,7 @@ values (1, 1),
 create table orders
 (
     id         bigserial primary key,
-    user_id    bigint references users (id),
+    username   varchar(255) references users (username),
     address    varchar(255),
     phone      varchar(255),
     price      integer,
@@ -102,8 +102,8 @@ create table order_items
     updated_at        timestamp default current_timestamp
 );
 
-insert into orders (user_id, address, phone, price)
-values (1, '1111', '1111', 100);
+insert into orders (username, address, phone, price)
+values ('user0', '1111', '1111', 100);
 
 insert into order_items (order_id, product_id, quantity, price_per_product, price)
 values (1, 1, 4, 25, 100);

@@ -28,25 +28,25 @@ import java.util.List;
         }
 )
 public class Order {
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column
+    private String username;
 
-    @Column(name = "price")
-    private int price;
-
-    @Column(name = "phone")
-    private String phone;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> items;
 
     @Column(name = "address")
     private String address;
 
-    @OneToMany(mappedBy = "order", cascade = {CascadeType.ALL})
-    private List<OrderItem> items;
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "price")
+    private int price;
 
     @CreationTimestamp
     @Column(name = "created_at")
